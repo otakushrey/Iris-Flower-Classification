@@ -24,3 +24,8 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Report build artifacts
+report_build/node_modules/
+report_build/pdf_previews/
+report_build/pdf_academic_previews/

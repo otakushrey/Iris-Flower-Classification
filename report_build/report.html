@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Report - Iris Flower Classification</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 22mm 18mm 22mm 18mm;
+      @bottom-right {
+        content: "Page " counter(page);
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        font-size: 9pt;
+        color: #64748b;
+      }
+      @top-right {
+        content: "Iris Flower Classification | Technical Project Report";
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        font-size: 8pt;
+        color: #94a3b8;
+      }
+    }
+
+    body {
+      font-family: "Charter", "Georgia", "Cambria", "Times New Roman", serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1e293b;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      color: #0f172a;
+      font-weight: 700;
+      margin-top: 1.6em;
+      margin-bottom: 0.5em;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    h1 { font-size: 20pt; border-bottom: 1.5px solid #0f172a; padding-bottom: 4px; margin-top: 0; }
+    h2 { font-size: 14pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; color: #1e3a8a; }
+    h3 { font-size: 12pt; color: #334155; }
+    h4 { font-size: 11pt; color: #475569; }
+
+    p { margin-top: 0.4em; margin-bottom: 0.7em; text-align: justify; }
+
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    /* Title Page Styling */
+    .title-page {
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+      padding: 40px 20px;
+    }
+
+    .title-banner {
+      margin-top: 60px;
+    }
+
+    .title-banner h1 {
+      font-size: 26pt;
+      border: none;
+      color: #1e3a8a;
+      line-height: 1.25;
+      margin-bottom: 15px;
+    }
+
+    .title-banner .subtitle {
+      font-family: "Segoe UI", sans-serif;
+      font-size: 13pt;
+      color: #475569;
+      max-width: 650px;
+      margin: 0 auto;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .badge-bar {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 9pt;
+    }
+
+    .badge {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .meta-block {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 500px;
+      margin: 40px auto;
+      text-align: left;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 10pt;
+      line-height: 1.8;
+    }
+
+    .meta-block table { width: 100%; border-collapse: collapse; }
+    .meta-block td { padding: 4px 8px; vertical-align: top; }
+    .meta-label { font-weight: 600; color: #475569; width: 35%; }
+    .meta-val { color: #0f172a; font-weight: 500; }
+
+    .toc-table, .standard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    .toc-table td, .toc-table th,
+    .standard-table td, .standard-table th {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .standard-table th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+      border-top: 1.5px solid #cbd5e1;
+      border-bottom: 1.5px solid #cbd5e1;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .standard-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .figure-container, .table-container {
+      margin: 20px 0;
+      text-align: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .figure-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px;
+      display: inline-block;
+      max-width: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .figure-box img, .figure-box svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .caption {
+      font-family: "Segoe UI", sans-serif;
+      font-size: 9pt;
+      color: #475569;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .caption strong {
+      color: #0f172a;
+    }
+
+    .code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 8.5pt;
+      padding: 12px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      line-height: 1.45;
+      margin: 12px 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 14px;
+      margin: 14px 0;
+      font-size: 9.5pt;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .callout-title {
+      font-family: "Segoe UI", sans-serif;
+      font-weight: 700;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+
+    ul, ol {
+      margin-top: 0.3em;
+      margin-bottom: 0.7em;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 0.25em;
+    }
+
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 12px 0;
+    }
+
+    .ref-list {
+      padding-left: 0;
+      list-style-type: none;
+    }
+
+    .ref-list li {
+      margin-bottom: 10px;
+      text-indent: -28px;
+      padding-left: 28px;
+      font-size: 9pt;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================================= -->
+<!-- TITLE PAGE                                                -->
+<!-- ========================================================= -->
+<div class="title-page">
+  <div class="title-banner">
+    <div style="font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 600; color: #4f46e5; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+      Technical & Academic Project Report
+    </div>
+    <h1>Iris Flower Classification</h1>
+    <div class="subtitle">
+      A Publication-Grade Full-Stack Deep Learning System Featuring Regularized Neural Networks, Statistical Exploratory Analysis, Principal Component Analysis, and Containerized Cloud Deployment
+    </div>
+    <div class="badge-bar">
+      <span class="badge">PyTorch 2.x</span>
+      <span class="badge">React 18 / Vite</span>
+      <span class="badge">Flask REST API</span>
+      <span class="badge">Scikit-Learn PCA</span>
+      <span class="badge">Docker / Render</span>
+    </div>
+  </div>
+
+  <div class="meta-block">
+    <table>
+      <tr>
+        <td class="meta-label">Author(s):</td>
+        <td class="meta-val">Shreyan Mondal & Priyanshu Karmakar</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Institution:</td>
+        <td class="meta-val">Chandigarh University</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Department / Course:</td>
+        <td class="meta-val">Computer Science & Engineering / Machine Learning</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Submission Date:</td>
+        <td class="meta-val">November 19, 2026</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Repository:</td>
+        <td class="meta-val">github.com/otakushrey/Iris-Flower-Classification</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Live Application:</td>
+        <td class="meta-val">iris-flower-classifier-z98q.onrender.com</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="font-family: 'Segoe UI', sans-serif; font-size: 9pt; color: #64748b;">
+    Department of Computer Science & Engineering &bull; Chandigarh University &bull; Academic Year 2026
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- PREFATORY: TOC, LIST OF FIGURES, LIST OF TABLES           -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>Table of Contents</h2>
+<table class="toc-table">
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th style="text-align: right;">Page</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>1. Abstract</strong></td><td style="text-align: right;">4</td></tr>
+    <tr><td><strong>2. Introduction</strong></td><td style="text-align: right;">4</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;2.1 Context and Motivation</td><td style="text-align: right;">4</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;2.2 Problem Statement</td><td style="text-align: right;">4</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;2.3 Specific Objectives and Project Scope</td><td style="text-align: right;">5</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;2.4 Repository Contribution & Report Organization</td><td style="text-align: right;">5</td></tr>
+    <tr><td><strong>3. Literature Review</strong></td><td style="text-align: right;">6</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;3.1 Survey of Existing Paradigms</td><td style="text-align: right;">6</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;3.2 Comparative Evaluation of Approaches</td><td style="text-align: right;">6</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;3.3 Identified Engineering & Research Gap</td><td style="text-align: right;">7</td></tr>
+    <tr><td><strong>4. Background Study</strong></td><td style="text-align: right;">7</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;4.1 Foundational Machine Learning & Statistical Concepts</td><td style="text-align: right;">7</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;4.2 Complete Technology Stack Breakdown</td><td style="text-align: right;">8</td></tr>
+    <tr><td><strong>5. Design Flow and Architectural Process</strong></td><td style="text-align: right;">10</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.1 End-to-End System Architecture</td><td style="text-align: right;">10</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.2 Modular Decomposition & File Mapping</td><td style="text-align: right;">10</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.3 Execution Workflow & Decision Logic</td><td style="text-align: right;">11</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.4 Request Lifecycle & Data Sequence Flow</td><td style="text-align: right;">12</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.5 Object Models, Dependencies & Class Hierarchy</td><td style="text-align: right;">12</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.6 REST API Contracts & Protocols</td><td style="text-align: right;">13</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;5.7 Security, Error Handling & System Trade-Offs</td><td style="text-align: right;">15</td></tr>
+    <tr><td><strong>6. Result Analysis & Validation</strong></td><td style="text-align: right;">16</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;6.1 Verification Methodology & Testing Strategy</td><td style="text-align: right;">16</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;6.2 Neural Network Empirical Training Performance</td><td style="text-align: right;">16</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;6.3 Statistical EDA & PCA Dimensionality Findings</td><td style="text-align: right;">17</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;6.4 Functional Verification & Test Case Matrix</td><td style="text-align: right;">19</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;6.5 Technical Limitations & Bottleneck Assessment</td><td style="text-align: right;">21</td></tr>
+    <tr><td><strong>7. Conclusions and Future Work</strong></td><td style="text-align: right;">22</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;7.1 Synthesis of Completed Objectives</td><td style="text-align: right;">22</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;7.2 Actionable Roadmap for Future Enhancements</td><td style="text-align: right;">22</td></tr>
+    <tr><td><strong>8. References</strong></td><td style="text-align: right;">23</td></tr>
+    <tr><td><strong>9. Appendix</strong></td><td style="text-align: right;">24</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;9.1 Annotated Directory Structure</td><td style="text-align: right;">24</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;9.2 Execution & Environment Setup Commands</td><td style="text-align: right;">25</td></tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;9.3 Key Code Artifacts</td><td style="text-align: right;">25</td></tr>
+  </tbody>
+</table>
+
+<div class="two-col-grid" style="margin-top: 25px;">
+  <div>
+    <h3>List of Figures</h3>
+    <table class="toc-table">
+      <tbody>
+        <tr><td>Figure 1: High-Level System Architecture Diagram</td><td style="text-align: right;">10</td></tr>
+        <tr><td>Figure 2: End-to-End Design & Execution Flowchart</td><td style="text-align: right;">11</td></tr>
+        <tr><td>Figure 3: Core Request / Data Sequence Diagram</td><td style="text-align: right;">12</td></tr>
+        <tr><td>Figure 4: Component & Class Dependency Diagram</td><td style="text-align: right;">12</td></tr>
+        <tr><td>Figure 5: Neural Network Validation Pipeline</td><td style="text-align: right;">16</td></tr>
+        <tr><td>Figure 6: Empirical Confusion Matrix & Learning Curves</td><td style="text-align: right;">17</td></tr>
+        <tr><td>Figure 7: Exploratory Data Analysis Visualizations</td><td style="text-align: right;">18</td></tr>
+        <tr><td>Figure 8: PCA Projections & Scree Variance Curve</td><td style="text-align: right;">18</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>List of Tables</h3>
+    <table class="toc-table">
+      <tbody>
+        <tr><td>Table 1: Comparative Analysis of Iris Classification Implementations</td><td style="text-align: right;">7</td></tr>
+        <tr><td>Table 2: Complete Technology Stack and Engineering Justifications</td><td style="text-align: right;">9</td></tr>
+        <tr><td>Table 3: Layer Specifications of the IrisNet Neural Architecture</td><td style="text-align: right;">11</td></tr>
+        <tr><td>Table 4: Comprehensive RESTful API Endpoint Contract</td><td style="text-align: right;">14</td></tr>
+        <tr><td>Table 5: Held-Out Test Set Empirical Classification Report</td><td style="text-align: right;">16</td></tr>
+        <tr><td>Table 6: End-to-End Functional Feature Verification Matrix</td><td style="text-align: right;">20</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- SECTION 1: ABSTRACT & SECTION 2: INTRODUCTION             -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>1. Abstract</h2>
+<p>
+This project report presents the architectural design, mathematical formalization, empirical implementation, and cloud deployment of a full-stack botanical pattern recognition system applied to the classic Fisher Iris dataset. While canonical machine learning literature frequently treats the Iris dataset as a trivial baseline restricted to isolated Jupyter notebooks or shallow statistical models, this work engineers an industrial-grade, end-to-end software application integrating statistical exploratory data analysis (EDA), principal component dimensionality reduction (PCA), deep neural network supervised classification, and dynamic web interfaces. At the computational core is <em>IrisNet</em>, a four-layer Multi-Layer Perceptron (MLP) constructed in PyTorch utilizing Batch Normalization, Dropout regularization, Adaptive Moment Estimation (Adam), and an adaptive learning rate scheduler with validation-based early stopping. When evaluated on a stratified 15% held-out test partition (23 samples), the model achieved an empirical test accuracy of 95.65% with macro and weighted F1-scores of 0.96. The backend is orchestrated via a Flask REST API running atop Gunicorn WSGI, capable of serving dynamic analytical heatmaps encoded in Base64 alongside raw JSON probabilistic predictions. A client-side Single Page Application (SPA) developed with React 18, Vite, and Tailwind CSS provides an accessible console supporting manual parametric input, simulated image-based morphological extraction, and batch CSV test set evaluation with live confusion matrix computation. Containerized with multi-stage Docker builds and tracked with Git Large File Storage (LFS), the system is deployed live on Render's cloud infrastructure.
+</p>
+<p><strong>Keywords:</strong> Deep Learning, PyTorch, Multi-Layer Perceptron, Principal Component Analysis, Flask REST API, React 18, Full-Stack Architecture, Cloud Deployment.</p>
+
+<h2>2. Introduction</h2>
+
+<h3>2.1 Context and Motivation</h3>
+<p>
+Botanical taxonomy and morphological classification constitute cornerstone applications in biological computer vision and computational pattern recognition. Historically introduced by Sir Ronald A. Fisher in 1936, the Iris dataset has served as the definitive benchmark for multivariate statistical discrimination. The dataset quantifies morphological variation across fifty specimens from each of three related species: <em>Iris setosa</em>, <em>Iris versicolor</em>, and <em>Iris virginica</em>, characterized through four physical measurements: sepal length, sepal width, petal length, and petal width.
+</p>
+<p>
+Despite its ubiquitous presence in pedagogical curricula, academic treatments of the Iris problem suffer from structural deficiencies in production engineering. Typically, implementations are isolated inside transient scripting environments, omitting essential elements of modern software development such as robust input sanitization, automated continuous normalization, modular separation of concerns, interactive visual dashboards, and containerized cloud deployment. This project bridges this engineering gap by architecting a production-grade, publication-quality full-stack platform that pairs deep neural network inference with accessible user consoles and high-dimensional analytical visualizations.
+</p>
+
+<h3>2.2 Problem Statement</h3>
+<p>
+Existing botanical classification tools and educational implementations manifest three persistent shortcomings:
+</p>
+<ol>
+  <li><strong>Architectural Decoupling:</strong> Classical statistical routines (e.g., Logistic Regression, Linear Discriminant Analysis) are rarely integrated into a unified software stack capable of serving both mathematical transformations (PCA) and deep learning inferences through standard HTTP protocols.</li>
+  <li><strong>Static Analysis Isolation:</strong> Exploratory Data Analysis (EDA) and dimensionality reduction charts are conventionally pre-rendered into static reports, precluding real-time recalculation, dynamic parameter tuning, or integration into client-side dashboards.</li>
+  <li><strong>Absence of Multi-Modal Evaluation:</strong> Evaluators cannot effortlessly test single-sample inferences, extract morphological features from flower photographs, or upload unseen CSV test datasets to generate dynamic confusion matrices and classification reports on demand.</li>
+</ol>
+
+<h3>2.3 Specific Objectives and Project Scope</h3>
+<p>
+The primary objective is to build and deploy an optimized, resilient, and aesthetic full-stack software system. The specific project scope encompasses:
+</p>
+<ul>
+  <li><strong>Mathematical & Statistical Modeling:</strong> Implementing automated StandardScaler feature normalization, covariance matrix computation, and Scikit-Learn Principal Component Analysis (PCA) across 2D and 3D projections with scree variance analysis.</li>
+  <li><strong>Deep Learning Architecture:</strong> Designing, training, regularizing, and serializing a PyTorch neural network (<em>IrisNet</em>) featuring Batch Normalization, Dropout, and validation-loss early stopping.</li>
+  <li><strong>RESTful Service Layer:</strong> Constructing a Flask application exposing eight distinct endpoints delivering JSON inference, dynamic Base64-encoded visual plots, and batch test evaluations.</li>
+  <li><strong>Modern Front-End Console:</strong> Authoring a reactive Single Page Application (SPA) in React 18 styled with Tailwind CSS, offering a unified dark-mode UI with measurement forms, image upload parsing, batch CSV evaluation, and real-time metric tables.</li>
+  <li><strong>Production Deployment:</strong> Containerizing the full stack using a multi-stage Docker build, versioning model artifacts with Git LFS, and deploying the unified application to Render.com with live public access.</li>
+</ul>
+<p>
+<em>Out of Scope:</em> The project excludes hardware-accelerated on-device edge training (mobile inference), automated satellite imagery harvesting, and unsupervised clustering without botanical ground truth.
+</p>
+
+<h3>2.4 Repository Contribution & Report Organization</h3>
+<p>
+The core contribution of the repository (<code>github.com/otakushrey/Iris-Flower-Classification</code>) is a cohesive, reproducible codebase combining deep learning rigor with modern web design. The remainder of this report is organized as follows: Section 3 surveys existing paradigms and defines the engineering gap; Section 4 details the foundational mathematical concepts and technology stack; Section 5 provides the system design, complete with five formal Mermaid architectural diagrams; Section 6 presents the validation methodology, empirical results, and functional verification matrix; Section 7 concludes with an actionable future roadmap; Section 8 provides IEEE references; and Section 9 contains technical appendices.
+</p>
+
+<!-- ========================================================= -->
+<!-- SECTION 3: LITERATURE REVIEW & SECTION 4: BACKGROUND      -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>3. Literature Review</h2>
+
+<h3>3.1 Survey of Existing Paradigms</h3>
+<p>
+Taxonomic classification algorithms have progressed through three distinct epochs: classical multivariate discriminant analysis, traditional machine learning (Support Vector Machines, Random Forests), and contemporary connectionist architectures (Deep Neural Networks). Fisher's seminal 1936 paper introduced Linear Discriminant Analysis (LDA), proving that linear combinations of morphological measurements could separate <em>Iris setosa</em> from other species, though linearly separating <em>Iris versicolor</em> from <em>Iris virginica</em> proved problematic due to dimensional overlap [1].
+</p>
+<p>
+Subsequent researchers applied Support Vector Machines (SVM) with radial basis function (RBF) kernels and Decision Trees, achieving higher accuracy across overlapping feature regions [2]. However, such models typically operate as "black boxes" in terminal environments, rarely paired with interactive graphical visualizers or scalable web APIs. In educational contexts, datasets are predominantly executed via Scikit-learn scripts within Jupyter Notebooks, creating a recognized disparity between machine learning prototyping and production software engineering [3].
+</p>
+
+<h3>3.2 Comparative Evaluation of Approaches</h3>
+<p>
+Table 1 summarizes representative existing approaches in botanical and Iris classification alongside the architecture presented in this work.
+</p>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>System / Approach</th>
+        <th>Core Model</th>
+        <th>Architecture</th>
+        <th>User Interface</th>
+        <th>Dynamic Analytics</th>
+        <th>Primary Limitations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Fisher (1936) [1]</strong></td>
+        <td>Linear Discriminant</td>
+        <td>Statistical Equation</td>
+        <td>None (Manual / Paper)</td>
+        <td>None</td>
+        <td>Linear boundaries; unable to separate non-linear overlaps.</td>
+      </tr>
+      <tr>
+        <td><strong>Scikit-Learn Tutorial Baseline</strong></td>
+        <td>Decision Tree / k-NN</td>
+        <td>Standalone Script</td>
+        <td>Terminal / Console</td>
+        <td>Static Matplotlib</td>
+        <td>No client-server separation; no state persistence; no API.</td>
+      </tr>
+      <tr>
+        <td><strong>Streamlit / Gradio Prototypes</strong></td>
+        <td>Random Forest</td>
+        <td>Monolithic Python</td>
+        <td>Basic Python Widgets</td>
+        <td>Pre-generated plots</td>
+        <td>Tightly coupled; limited CSS/UI customization; high server overhead.</td>
+      </tr>
+      <tr>
+        <td><strong>Mobile App CNNs (LeafSnap, PlantNet)</strong></td>
+        <td>ResNet / MobileNet</td>
+        <td>Mobile Client + Cloud</td>
+        <td>Mobile GUI</td>
+        <td>Classification Only</td>
+        <td>Focuses solely on raw foliage photos; lacks tabular morphological analysis.</td>
+      </tr>
+      <tr>
+        <td><strong>This Project (IrisNet Full-Stack)</strong></td>
+        <td><strong>PyTorch 4-Layer MLP</strong></td>
+        <td><strong>Decoupled REST API + SPA</strong></td>
+        <td><strong>React 18 / Tailwind CSS</strong></td>
+        <td><strong>Dynamic Base64 Heatmaps, 2D/3D PCA & Curves</strong></td>
+        <td><strong>End-to-end full stack; multi-modal (Form, Image, CSV); cloud-hosted.</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 1:</strong> Comparative Analysis of Iris Classification Implementations.</div>
+</div>
+
+<h3>3.3 Identified Engineering & Research Gap</h3>
+<p>
+The survey reveals that existing solutions either provide lightweight statistical code without accessible software architecture or implement heavy image-only computer vision models without transparent mathematical analysis. This project directly addresses this gap by creating an integrated platform that simultaneously provides: (1) rigorous statistical EDA and PCA dimensionality analysis, (2) regularized deep neural network classification, (3) a high-performance REST API, and (4) an aesthetic, multi-modal reactive frontend.
+</p>
+
+<h2>4. Background Study</h2>
+
+<h3>4.1 Foundational Machine Learning & Statistical Concepts</h3>
+<p>
+The core computational pipeline rests on four foundational methodologies:
+</p>
+<ol>
+  <li><strong>Z-Score Feature Standardization:</strong> Because raw floral dimensions span varying measurement intervals (sepal lengths reach 7.9 cm while petal widths measure as low as 0.1 cm), unscaled features distort distance-based calculations and gradient updates. The <code>StandardScaler</code> computes mean \(\mu_j\) and standard deviation \(\sigma_j\) across training samples to normalize each feature vector:
+  \[
+  z = \frac{x - \mu}{\sigma}
+  \]
+  </li>
+  <li><strong>Principal Component Analysis (PCA):</strong> High-dimensional feature spaces exhibit multi-collinearity. PCA performs orthogonal linear transformations to identify principal eigenvectors of the covariance matrix \(\Sigma = \frac{1}{n-1} X^T X\). By projecting the standardized 4D feature matrix onto eigenvectors corresponding to the largest eigenvalues, the system compresses variance into two and three dimensions, maximizing cluster separability.</li>
+  <li><strong>Multi-Layer Perceptron (MLP) with Batch Normalization:</strong> Neural network layers apply linear transformations followed by non-linear activations: \(h^{(l)} = \text{ReLU}(W^{(l)} h^{(l-1)} + b^{(l)})\). To mitigate internal covariate shift and accelerate convergence, Batch Normalization normalizes activations across mini-batches prior to activation:
+  \[
+  \hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad y_i = \gamma \hat{x}_i + \beta
+  \]
+  </li>
+  <li><strong>Dropout Regularization:</strong> To prevent co-adaptation of hidden units in small datasets, Dropout randomly zeroes neurons with probability \(p \in \{0.3, 0.2\}\) during training passes, effectively training an ensemble of thinned subnetworks.</li>
+</ol>
+
+<h3>4.2 Complete Technology Stack Breakdown</h3>
+<p>
+Table 2 details the software technologies extracted directly from repository manifest files (<code>requirements.txt</code>, <code>package.json</code>, <code>render.yaml</code>, <code>Dockerfile</code>), accompanied by architectural justifications.
+</p>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Technology</th>
+        <th>Version / Source</th>
+        <th>Architectural Justification & Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Core Language</strong></td>
+        <td>Python</td>
+        <td>3.11 / 3.12 / 3.15</td>
+        <td>Industry standard for machine learning, numerical computation, and scientific computing.</td>
+      </tr>
+      <tr>
+        <td><strong>Deep Learning</strong></td>
+        <td>PyTorch</td>
+        <td>2.15.0 (CPU Wheel)</td>
+        <td>Provides dynamic computation graphs, autograd engine, and native tensor operations.</td>
+      </tr>
+      <tr>
+        <td><strong>Data Science</strong></td>
+        <td>Scikit-Learn, Pandas, NumPy</td>
+        <td>sklearn 1.9+, pandas 3.1+, numpy 2.5+</td>
+        <td>Dataframe manipulation, stratified cross-validation, standardization, and PCA decomposition.</td>
+      </tr>
+      <tr>
+        <td><strong>Visualization</strong></td>
+        <td>Matplotlib & Seaborn</td>
+        <td>matplotlib 3.11+, seaborn 0.13+</td>
+        <td>Headless rendering (<code>Agg</code> backend) of dark-themed statistical charts converted to Base64 PNGs.</td>
+      </tr>
+      <tr>
+        <td><strong>Backend API</strong></td>
+        <td>Flask & Flask-CORS</td>
+        <td>flask 3.1.3, flask-cors 6.0+</td>
+        <td>Lightweight, micro-service REST framework routing client requests and handling CORS headers.</td>
+      </tr>
+      <tr>
+        <td><strong>WSGI Server</strong></td>
+        <td>Gunicorn</td>
+        <td>gunicorn 21.2+</td>
+        <td>Production-grade multi-worker WSGI HTTP server managing asynchronous worker lifecycles.</td>
+      </tr>
+      <tr>
+        <td><strong>Frontend Core</strong></td>
+        <td>React 18 & Vite</td>
+        <td>react 18.2, vite 5.4 / 8.3</td>
+        <td>Component-based UI with Virtual DOM reactivity, bundled in &lt;1 second via modern Vite toolchains.</td>
+      </tr>
+      <tr>
+        <td><strong>Client Styling</strong></td>
+        <td>Tailwind CSS</td>
+        <td>tailwindcss 3.3.5</td>
+        <td>Utility-first responsive styling defining bespoke dark-mode design tokens and gradients.</td>
+      </tr>
+      <tr>
+        <td><strong>HTTP Client</strong></td>
+        <td>Axios</td>
+        <td>axios 1.6+</td>
+        <td>Promise-based HTTP client handling JSON payloads, multipart file uploads, and error interception.</td>
+      </tr>
+      <tr>
+        <td><strong>Containerization</strong></td>
+        <td>Docker</td>
+        <td>Multi-Stage Alpine + Slim</td>
+        <td>Builds frontend in Node 20 and packages production Python 3.11 runtime into a compact image.</td>
+      </tr>
+      <tr>
+        <td><strong>PaaS Hosting</strong></td>
+        <td>Render.com</td>
+        <td>Native Web Service</td>
+        <td>Cloud hosting utilizing Gunicorn WSGI and auto-deploying via GitHub webhooks.</td>
+      </tr>
+      <tr>
+        <td><strong>Version Control</strong></td>
+        <td>Git & Git LFS</td>
+        <td>git 2.56+, git-lfs 3.8.1</td>
+        <td>Source tracking with Git Large File Storage pointer virtualization for <code>.pth</code> and <code>.joblib</code> binaries.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 2:</strong> Complete Technology Stack and Engineering Justifications.</div>
+</div>
+
+<!-- ========================================================= -->
+<!-- SECTION 5: DESIGN FLOW AND ARCHITECTURAL PROCESS          -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>5. Design Flow and Architectural Process</h2>
+
+<h3>5.1 End-to-End System Architecture</h3>
+<p>
+The application adheres to a decoupled client-server architectural pattern, organized into three distinct operational tiers: Client Interface, Web Gateway & Service Layer, and the Core Analytics Engine. Communication occurs strictly over stateless HTTP using JSON payloads for parametric data and MIME-encoded Base64 strings for graphical artifacts. Figure 1 illustrates the high-level system topology.
+</p>
+
+<div class="figure-container">
+  <div class="figure-box">
+    <img src="diagrams/figure1_architecture.svg" alt="Figure 1: High-Level System Architecture Diagram">
+  </div>
+  <div class="caption"><strong>Figure 1:</strong> High-Level System Architecture Diagram illustrating client-server partitioning, WSGI gateway, deep learning engine, and Git LFS persistence layers.</div>
+</div>
+
+<h3>5.2 Modular Decomposition & File Mapping</h3>
+<p>
+The repository is partitioned into modular boundaries to isolate responsibilities:
+</p>
+<ul>
+  <li><code>backend/model/nn_model.py</code>: Implements the <code>IrisNet</code> neural network class inheriting from <code>torch.nn.Module</code>. It defines input dimensions, hidden linear layers, batch normalization modules, dropout probabilities, and softmax probability mapping functions.</li>
+  <li><code>backend/model/train.py</code>: Governs dataset loading, stratified splitting (70/15/15), standard scaler fitting, training loop execution, learning rate scheduling, validation early stopping, metric calculation, and artifact serialization.</li>
+  <li><code>backend/model/analysis.py</code>: Houses the <code>IrisAnalysis</code> class, encapsulating all data transformation and visual plotting methods using Matplotlib's headless <code>Agg</code> backend.</li>
+  <li><code>backend/utils/preprocess.py</code>: Validates incoming numeric parameters against physical botanical boundaries and loads persisted scaler objects.</li>
+  <li><code>backend/app.py</code>: Acts as the central application router, exposing REST endpoints, managing CORS policies, serving static production React SPA assets, and executing auto-training hooks.</li>
+  <li><code>frontend/src/pages/</code>: Contains the reactive page components: <code>Home.jsx</code> (interactive console), <code>EDA.jsx</code> (statistical exploration), <code>PCA.jsx</code> (eigenvalue projections), and <code>Results.jsx</code> (model report).</li>
+</ul>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Layer Type</th>
+        <th>Input Dimension</th>
+        <th>Output Dimension</th>
+        <th>Activation / Regularization</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Input</strong></td>
+        <td>Input Features</td>
+        <td>(N, 4)</td>
+        <td>(N, 4)</td>
+        <td>Z-score Standardization via StandardScaler</td>
+      </tr>
+      <tr>
+        <td><strong>Hidden 1</strong></td>
+        <td>Linear + BN</td>
+        <td>(N, 4)</td>
+        <td>(N, 64)</td>
+        <td>BatchNorm1d + ReLU + Dropout (p = 0.3)</td>
+      </tr>
+      <tr>
+        <td><strong>Hidden 2</strong></td>
+        <td>Linear + BN</td>
+        <td>(N, 64)</td>
+        <td>(N, 32)</td>
+        <td>BatchNorm1d + ReLU + Dropout (p = 0.2)</td>
+      </tr>
+      <tr>
+        <td><strong>Hidden 3</strong></td>
+        <td>Linear</td>
+        <td>(N, 32)</td>
+        <td>(N, 16)</td>
+        <td>ReLU Activation Function</td>
+      </tr>
+      <tr>
+        <td><strong>Output</strong></td>
+        <td>Linear Classifier</td>
+        <td>(N, 16)</td>
+        <td>(N, 3)</td>
+        <td>Raw Logits &rarr; Softmax Probabilities</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 3:</strong> Layer Specifications of the IrisNet Neural Architecture.</div>
+</div>
+
+<h3>5.3 Execution Workflow & Decision Logic</h3>
+<p>
+Figure 2 outlines the runtime decision logic across the application's four primary operational modes: Manual Form Input, Flower Photograph Upload, Batch CSV Test Evaluation, and Exploratory Analytics Navigation.
+</p>
+
+<div class="figure-container">
+  <div class="figure-box">
+    <img src="diagrams/figure2_execution_flow.svg" alt="Figure 2: End-to-End Design & Execution Flowchart">
+  </div>
+  <div class="caption"><strong>Figure 2:</strong> End-to-End Design and Execution Flowchart detailing input validation, feature scaling, inference pathways, and chart generation.</div>
+</div>
+
+<div class="page-break"></div>
+
+<h3>5.4 Request Lifecycle & Data Sequence Flow</h3>
+<p>
+Figure 3 traces two representative synchronous request cycles: (1) single-sample user inference via the reactive measurement form, and (2) batch test set evaluation with live confusion matrix generation.
+</p>
+
+<div class="figure-container">
+  <div class="figure-box">
+    <img src="diagrams/figure3_sequence_diagram.svg" alt="Figure 3: Core Request / Data Sequence Diagram">
+  </div>
+  <div class="caption"><strong>Figure 3:</strong> Core Request and Data Sequence Diagram tracing synchronous component lifecycles across client and backend micro-services.</div>
+</div>
+
+<h3>5.5 Object Models, Dependencies & Class Hierarchy</h3>
+<p>
+Figure 4 displays the class hierarchy and component dependency relationships across both Python backend modules and React frontend components.
+</p>
+
+<div class="figure-container">
+  <div class="figure-box">
+    <img src="diagrams/figure4_class_diagram.svg" alt="Figure 4: Component & Class Dependency Diagram">
+  </div>
+  <div class="caption"><strong>Figure 4:</strong> Component, Class, and Object Dependency Diagram illustrating inheritance, composition, and HTTP client consumption.</div>
+</div>
+
+<div class="page-break"></div>
+
+<h3>5.6 REST API Contracts & Protocols</h3>
+<p>
+The application exposes eight stateless RESTful endpoints designed according to standard HTTP semantics. Table 4 specifies the complete API contract.
+</p>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>Endpoint</th>
+        <th>Method</th>
+        <th>Request Payload</th>
+        <th>Response Payload</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/api/health</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td><code>{"status": "ok", "model_loaded": bool}</code></td>
+        <td>Health check and model memory availability status.</td>
+      </tr>
+      <tr>
+        <td><code>/api/eda</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td><code>{"dataset_info": {...}, "charts": {heatmap, pairplot, ...}}</code></td>
+        <td>Returns descriptive statistics and Base64-encoded EDA charts.</td>
+      </tr>
+      <tr>
+        <td><code>/api/pca</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td><code>{"explained_variance": [...], "charts": {pca_2d, scree, ...}}</code></td>
+        <td>Computes PCA decomposition and outputs 2D/3D projections and loadings.</td>
+      </tr>
+      <tr>
+        <td><code>/api/model-report</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td><code>{"test_accuracy": float, "report": str, "charts": {...}}</code></td>
+        <td>Returns held-out test metrics, confusion matrix, and training curves.</td>
+      </tr>
+      <tr>
+        <td><code>/api/predict</code></td>
+        <td>POST</td>
+        <td><code>{"sepal_length": f, "sepal_width": f, "petal_length": f, "petal_width": f}</code></td>
+        <td><code>{"predicted_class": str, "confidence": f, "probabilities": {...}}</code></td>
+        <td>Validates, scales, and classifies single floral feature vectors.</td>
+      </tr>
+      <tr>
+        <td><code>/api/predict-image</code></td>
+        <td>POST</td>
+        <td>Multipart <code>file</code> or JSON <code>{"image": "&lt;base64&gt;"}</code></td>
+        <td><code>{"predicted_class": str, "extracted_features": {...}, "preview": str}</code></td>
+        <td>Extracts visual color/aspect-ratio metrics and performs classification.</td>
+      </tr>
+      <tr>
+        <td><code>/api/evaluate-testset</code></td>
+        <td>POST</td>
+        <td>Multipart <code>.csv</code> file or JSON <code>{"samples": [...]}</code></td>
+        <td><code>{"accuracy": float, "classification_report": str, "charts": {...}}</code></td>
+        <td>Evaluates model on uploaded batch test data and computes live metrics.</td>
+      </tr>
+      <tr>
+        <td><code>/api/sample-testset</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td><code>{"samples": [...], "count": 30}</code></td>
+        <td>Returns a balanced 30-sample benchmark dataset for 1-click web evaluation.</td>
+      </tr>
+      <tr>
+        <td><code>/</code>, <code>/&lt;path&gt;</code></td>
+        <td>GET</td>
+        <td>None</td>
+        <td>HTML / JavaScript / CSS</td>
+        <td>Static SPA fallback server delivering the compiled React frontend bundle.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 4:</strong> Comprehensive RESTful API Endpoint Contract.</div>
+</div>
+
+<h3>5.7 Security, Error Handling & System Trade-Offs</h3>
+<p>
+The architecture balances security, responsiveness, and deployment simplicity through several targeted engineering trade-offs:
+</p>
+<ul>
+  <li><strong>Input Sanitization:</strong> In <code>utils/preprocess.py</code>, incoming requests are strictly parsed. Numeric features must reside between 0.1 cm and 30.0 cm; missing or non-numeric types trigger an immediate <code>HTTP 400 Bad Request</code> with descriptive error strings.</li>
+  <li><strong>Headless Chart Buffering:</strong> Generating dynamic plots on the server risks threading conflicts and memory leaks if GUI backends attempt display attachment. To prevent this, <code>matplotlib.use('Agg')</code> is invoked before any plotting routines. Figures are written into isolated in-memory <code>io.BytesIO</code> buffers and explicitly closed via <code>plt.close(fig)</code>, eliminating disk I/O bottlenecks.</li>
+  <li><strong>Unified vs. Decoupled Hosting:</strong> Rather than deploying the frontend to a static host (Vercel) and the backend to a separate API host (Render), Flask was configured to directly serve <code>frontend/dist</code> in production. This eliminates cross-origin resource sharing (CORS) pre-flight overhead, simplifies SSL management, and provides a zero-configuration single URL for evaluators.</li>
+  <li><strong>Auto-Training Cloud Hook:</strong> Many cloud platform free tiers (e.g., Render) omit Git LFS extraction during rapid container assembly. The application implements an auto-training startup hook: if <code>iris_nn.pth</code> is missing or detected as an unexpanded Git LFS text pointer (&lt;2000 bytes), <code>app.py</code> automatically executes <code>train.py</code> in a subprocess, training the neural network in &lt;2 seconds before listening for incoming connections.</li>
+</ul>
+
+<!-- ========================================================= -->
+<!-- SECTION 6: RESULT ANALYSIS AND VALIDATION                 -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>6. Result Analysis & Validation</h2>
+
+<h3>6.1 Verification Methodology & Testing Strategy</h3>
+<p>
+System verification was executed across three rigorous dimensions: (1) mathematical empirical model validation on a held-out test split, (2) statistical validation of EDA and PCA transformations, and (3) automated functional verification of REST API endpoints and client interactions. Figure 5 depicts the formal model validation and continuous evaluation pipeline.
+</p>
+
+<div class="figure-container">
+  <div class="figure-box">
+    <img src="diagrams/figure5_validation_pipeline.svg" alt="Figure 5: Neural Network Validation and Training Pipeline">
+  </div>
+  <div class="caption"><strong>Figure 5:</strong> Neural Network Validation and Continuous Training Pipeline detailing data partitioning, scaler serialization, early stopping, and metric computation.</div>
+</div>
+
+<h3>6.2 Neural Network Empirical Training Performance</h3>
+<p>
+The PyTorch <em>IrisNet</em> architecture was trained using the Adam optimizer (\(\text{lr} = 0.001, \text{weight\_decay} = 10^{-4}\)) with mini-batch size 32. Training progressed with validation monitoring; early stopping halted execution at <strong>Epoch 77</strong> when validation loss failed to decrease for 20 consecutive epochs, successfully preventing overfitting.
+</p>
+<p>
+The final checkpoint was evaluated against the isolated held-out test partition (23 samples). The model achieved a <strong>Test Accuracy of 95.65%</strong> (22 correct predictions out of 23 test samples). Table 5 details the exact empirical classification metrics derived from <code>train.py</code> execution.
+</p>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>Species Class</th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>F1-Score</th>
+        <th>Test Support</th>
+        <th>Empirical Observations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Iris setosa</strong></td>
+        <td>1.00</td>
+        <td>1.00</td>
+        <td>1.00</td>
+        <td>7</td>
+        <td>Perfect 100% precision and recall; linearly separable.</td>
+      </tr>
+      <tr>
+        <td><strong>Iris versicolor</strong></td>
+        <td>0.89</td>
+        <td>1.00</td>
+        <td>0.94</td>
+        <td>8</td>
+        <td>Flawless recall; 1 virginica sample classified as versicolor.</td>
+      </tr>
+      <tr>
+        <td><strong>Iris virginica</strong></td>
+        <td>1.00</td>
+        <td>0.88</td>
+        <td>0.93</td>
+        <td>8</td>
+        <td>Perfect precision; 7 of 8 samples identified correctly.</td>
+      </tr>
+      <tr>
+        <td><strong>Accuracy</strong></td>
+        <td colspan="3" style="text-align: center; font-weight: 700;">0.9565 (95.65%)</td>
+        <td>23</td>
+        <td>Overall test set accuracy.</td>
+      </tr>
+      <tr>
+        <td><strong>Macro Average</strong></td>
+        <td>0.96</td>
+        <td>0.96</td>
+        <td>0.96</td>
+        <td>23</td>
+        <td>Unweighted mean across all three botanical classes.</td>
+      </tr>
+      <tr>
+        <td><strong>Weighted Average</strong></td>
+        <td>0.96</td>
+        <td>0.96</td>
+        <td>0.96</td>
+        <td>23</td>
+        <td>Class-weighted average balanced against sample support.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 5:</strong> Held-Out Test Set Empirical Classification Report generated from the trained PyTorch IrisNet model.</div>
+</div>
+
+<div class="figure-container">
+  <div class="two-col-grid">
+    <div class="figure-box">
+      <img src="charts/model_confusion_matrix.png" alt="Confusion Matrix">
+      <div class="caption"><strong>(a)</strong> Test Set Confusion Matrix (22/23 Correct)</div>
+    </div>
+    <div class="figure-box">
+      <img src="charts/model_loss_curve.png" alt="Training & Validation Loss Curve">
+      <div class="caption"><strong>(b)</strong> Loss Curve (Early Stopped at Epoch 77)</div>
+    </div>
+  </div>
+  <div class="caption"><strong>Figure 6:</strong> Empirical Training Visualizations: (a) 3x3 confusion matrix heatmap, and (b) training and validation cross-entropy loss trajectories across epochs.</div>
+</div>
+
+<h3>6.3 Statistical EDA & PCA Dimensionality Findings</h3>
+<p>
+The automated analytical engine (<code>analysis.py</code>) performed multivariate statistical decomposition across the 150 dataset specimens:
+</p>
+<ul>
+  <li><strong>Correlation Analysis:</strong> Petal Length and Petal Width exhibit an exceptionally strong positive Pearson correlation coefficient (\(r = 0.96\)), demonstrating that petal expansion occurs proportionally across both axes. Conversely, Sepal Length and Sepal Width exhibit weak negative correlation (\(r = -0.12\)).</li>
+  <li><strong>Principal Component Explained Variance:</strong> PCA decomposition reveals that the first principal component (PC1) accounts for <strong>72.96%</strong> of total dataset variance, while PC2 accounts for <strong>22.85%</strong>. Cumulatively, the first two components capture <strong>95.81%</strong> of total data variance. PC3 and PC4 contribute 3.67% and 0.52%, respectively.</li>
+  <li><strong>Feature Loadings:</strong> Petal Length and Petal Width demonstrate the largest positive loadings along PC1 (0.85 and 0.36), confirming that petal dimensions dominate species discrimination.</li>
+</ul>
+
+<div class="figure-container">
+  <div class="two-col-grid">
+    <div class="figure-box">
+      <img src="charts/eda_heatmap.png" alt="Correlation Heatmap">
+      <div class="caption"><strong>(a)</strong> Feature Pearson Correlation Matrix</div>
+    </div>
+    <div class="figure-box">
+      <img src="charts/eda_pairplot.png" alt="Seaborn Pairplot">
+      <div class="caption"><strong>(b)</strong> Pairwise Feature Distributions by Species</div>
+    </div>
+  </div>
+  <div class="caption"><strong>Figure 7:</strong> Exploratory Data Analysis: (a) Pearson correlation coefficient heatmap, and (b) pairwise distribution scatter matrix colored by Iris species.</div>
+</div>
+
+<div class="figure-container">
+  <div class="two-col-grid">
+    <div class="figure-box">
+      <img src="charts/pca_2d.png" alt="2D PCA Projection">
+      <div class="caption"><strong>(a)</strong> 2D PCA Projection (PC1: 73.0%, PC2: 22.9%)</div>
+    </div>
+    <div class="figure-box">
+      <img src="charts/pca_scree.png" alt="PCA Scree Plot">
+      <div class="caption"><strong>(b)</strong> Scree Plot & Cumulative Explained Variance</div>
+    </div>
+  </div>
+  <div class="caption"><strong>Figure 8:</strong> Dimensionality Reduction: (a) 2D PCA cluster projection showing clear separation of <em>setosa</em> and distinct boundaries for <em>versicolor</em> and <em>virginica</em>, and (b) Scree plot confirming 95.81% variance capture in two components.</div>
+</div>
+
+<div class="page-break"></div>
+
+<h3>6.4 Functional Verification & Test Case Matrix</h3>
+<p>
+To ensure system stability, every software module, API route, and user interaction mode was verified against formal test criteria. Table 6 records the functional verification matrix.
+</p>
+
+<div class="table-container">
+  <table class="standard-table">
+    <thead>
+      <tr>
+        <th>Test ID</th>
+        <th>Module / Component</th>
+        <th>Verification Scenario</th>
+        <th>Expected Output</th>
+        <th>Actual Observed Output</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>TC-01</strong></td>
+        <td><code>backend/model/train.py</code></td>
+        <td>Execute neural network training pipeline</td>
+        <td>Loss convergence; weights saved to <code>iris_nn.pth</code></td>
+        <td>Early stopping at Epoch 77; 95.65% accuracy; weights saved (19 KB)</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-02</strong></td>
+        <td><code>backend/utils/preprocess.py</code></td>
+        <td>Input boundary check with valid data</td>
+        <td>Returns parsed float array and <code>None</code> error</td>
+        <td><code>([5.1, 3.5, 1.4, 0.2], None)</code></td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-03</strong></td>
+        <td><code>backend/utils/preprocess.py</code></td>
+        <td>Input boundary check with out-of-range value</td>
+        <td>Returns error message string</td>
+        <td><code>(None, "Value for sepal_length (35.0) out of valid range")</code></td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-04</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/health</code></td>
+        <td>HTTP GET health check</td>
+        <td>HTTP 200 with <code>model_loaded: true</code></td>
+        <td><code>{"model_loaded": true, "status": "ok"}</code></td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-05</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/predict</code></td>
+        <td>HTTP POST with canonical Setosa features</td>
+        <td>HTTP 200 with <code>predicted_class: "setosa"</code> (&gt;95% conf)</td>
+        <td><code>predicted_class: "setosa", confidence: 0.9930</code></td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-06</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/eda</code></td>
+        <td>HTTP GET EDA analytics bundle</td>
+        <td>HTTP 200 with 4 Base64 strings and dataset stats</td>
+        <td>Received JSON containing 4 valid PNG Base64 images and stats</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-07</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/pca</code></td>
+        <td>HTTP GET PCA analytics bundle</td>
+        <td>HTTP 200 with 4 Base64 charts and variance vector</td>
+        <td>Received 2D/3D scatter, scree, loadings and variance array</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-08</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/predict-image</code></td>
+        <td>HTTP POST multipart image file upload</td>
+        <td>HTTP 200 with morphological estimates and classification</td>
+        <td>Image decoded; aspect-ratio and color analyzed; predicted class returned</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-09</strong></td>
+        <td><code>backend/app.py</code>: <code>/api/evaluate-testset</code></td>
+        <td>HTTP POST 30-sample benchmark CSV</td>
+        <td>HTTP 200 with accuracy, report string, and CM chart</td>
+        <td>Evaluated 30 samples; Accuracy: 1.0; CM Base64 generated</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-10</strong></td>
+        <td><code>frontend/src/App.jsx</code></td>
+        <td>Client-side route navigation (/eda, /pca, /report)</td>
+        <td>Components render without uncaught errors</td>
+        <td>Active links highlighted; skeleton loaders render charts properly</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-11</strong></td>
+        <td><code>frontend/vite.config.js</code></td>
+        <td>Execute production build (<code>npm run build</code>)</td>
+        <td>Generates optimized bundle in <code>frontend/dist</code></td>
+        <td>Build completed in 747ms; HTML (0.76 KB), CSS (18.7 KB), JS (266 KB)</td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+      <tr>
+        <td><strong>TC-12</strong></td>
+        <td><code>Dockerfile</code> & <code>render.yaml</code></td>
+        <td>Cloud deployment build and live routing</td>
+        <td>Live HTTPS web console serving full stack</td>
+        <td>Deployed live at <code>https://iris-flower-classifier-z98q.onrender.com</code></td>
+        <td><strong style="color: green;">PASSED</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="caption"><strong>Table 6:</strong> End-to-End Functional Feature Verification Matrix.</div>
+</div>
+
+<h3>6.5 Technical Limitations & Bottleneck Assessment</h3>
+<p>
+Rigorous testing highlighted three architectural limitations:
+</p>
+<ol>
+  <li><strong>Overlapping Feature Boundary:</strong> As demonstrated in the confusion matrix (Figure 6a), boundary overlap between <em>Iris versicolor</em> and <em>Iris virginica</em> caused one specimen misclassification. Due to morphological biological variation, botanical dimensions alone occasionally create statistical ambiguity.</li>
+  <li><strong>Simulated Image Extraction vs. End-to-End Vision:</strong> The <code>/api/predict-image</code> route uses color space profiling and aspect-ratio heuristics to estimate floral measurements, which are then passed to the neural network. While accessible for non-technical users, it is not an end-to-end Convolutional Neural Network (CNN) trained directly on raw flower pixels.</li>
+  <li><strong>Cold-Start Latency on Free Cloud Tiers:</strong> Render's free tier spins down idle web services after 15 minutes of inactivity. Initial client requests after dormancy incur a 30–50 second cold-start delay while the Linux container boots and initializes Python libraries.</li>
+</ol>
+
+<!-- ========================================================= -->
+<!-- SECTION 7: CONCLUSIONS & SECTION 8: REFERENCES            -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>7. Conclusions and Future Work</h2>
+
+<h3>7.1 Synthesis of Completed Objectives</h3>
+<p>
+This project successfully designed, implemented, validated, and deployed a publication-grade full-stack botanical classification system. By integrating mathematical dimensionality reduction (PCA), headless statistical visualization (EDA), and a regularized PyTorch neural network (<em>IrisNet</em>) with a reactive modern frontend, the project resolves the historical gap between isolated academic machine learning prototypes and scalable software engineering.
+</p>
+<p>
+Empirical verification confirmed that the multi-layer perceptron achieved 95.65% accuracy on held-out test data, with early stopping at epoch 77 preventing overfitting. The containerized deployment on Render (<code>https://iris-flower-classifier-z98q.onrender.com/</code>) demonstrates robust real-world usability, allowing evaluators to perform instant single-sample classifications, upload test images, and execute batch CSV evaluations with automated confusion matrix generation.
+</p>
+
+<h3>7.2 Actionable Roadmap for Future Enhancements</h3>
+<p>
+To extend the system beyond its current implementation, the following concrete enhancements are planned:
+</p>
+<ul>
+  <li><strong>End-to-End Deep Vision Backbone:</strong> Integrate a fine-tuned MobileNetV3 or ResNet-18 vision transformer capable of classifying flower photographs directly from pixel tensors without intermediate heuristic feature extraction.</li>
+  <li><strong>Automated Model Retraining Pipeline:</strong> Implement an active learning loop where validated user test uploads are stored in an append-only PostgreSQL database, triggering automated retraining pipelines via Celery or Redis background queues.</li>
+  <li><strong>ONNX Runtime & WebAssembly Acceleration:</strong> Export the trained PyTorch weights to Open Neural Network Exchange (ONNX) format and execute inference entirely client-side using <code>onnxruntime-web</code>, eliminating server latency and cold starts.</li>
+  <li><strong>Comprehensive CI/CD Automation:</strong> Configure GitHub Actions workflows to run automated PyTest suites, ESLint checks, Docker image builds, and automated health checks on every pull request.</li>
+</ul>
+
+<h2>8. References</h2>
+<ul class="ref-list">
+  <li>[1] R. A. Fisher, "The use of multiple measurements in taxonomic problems," <em>Annals of Eugenics</em>, vol. 7, no. 2, pp. 179–188, Sep. 1936.</li>
+  <li>[2] C. Cortes and V. Vapnik, "Support-vector networks," <em>Machine Learning</em>, vol. 20, no. 3, pp. 273–297, Sep. 1995.</li>
+  <li>[3] F. Pedregosa et al., "Scikit-learn: Machine learning in Python," <em>Journal of Machine Learning Research</em>, vol. 12, pp. 2825–2830, Nov. 2011.</li>
+  <li>[4] A. Paszke et al., "PyTorch: An imperative style, high-performance deep learning library," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 32, pp. 8024–8035, 2019.</li>
+  <li>[5] S. Ioffe and C. Szegedy, "Batch Normalization: Accelerating deep network training by reducing internal covariate shift," in <em>Proceedings of the 32nd International Conference on Machine Learning (ICML)</em>, pp. 448–456, 2015.</li>
+  <li>[6] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, "Dropout: A simple way to prevent neural networks from overfitting," <em>Journal of Machine Learning Research</em>, vol. 15, no. 1, pp. 1929–1958, 2014.</li>
+  <li>[7] D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," in <em>Proceedings of the 3rd International Conference on Learning Representations (ICLR)</em>, 2015.</li>
+  <li>[8] I. T. Jolliffe and J. Cadima, "Principal component analysis: A review and recent developments," <em>Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences</em>, vol. 374, no. 2065, p. 20150202, Apr. 2016.</li>
+  <li>[9] J. D. Hunter, "Matplotlib: A 2D graphics environment," <em>Computing in Science & Engineering</em>, vol. 9, no. 3, pp. 90–95, 2007.</li>
+  <li>[10] M. L. Waskom, "Seaborn: Statistical data visualization," <em>Journal of Open Source Software</em>, vol. 6, no. 60, p. 3021, Apr. 2021.</li>
+  <li>[11] M. Grinberg, <em>Flask Web Development: Developing Web Applications with Python</em>, 2nd ed. Sebastopol, CA: O'Reilly Media, 2018.</li>
+  <li>[12] A. Banks and E. Porcello, <em>Learning React: Modern Patterns for Developing React Apps</em>, 2nd ed. Sebastopol, CA: O'Reilly Media, 2020.</li>
+  <li>[13] S. Mondal and P. Karmakar, "Iris Flower Classification: Production Deep Learning System," GitHub Repository, 2026. [Online]. Available: https://github.com/otakushrey/Iris-Flower-Classification</li>
+</ul>
+
+<!-- ========================================================= -->
+<!-- SECTION 9: APPENDIX                                       -->
+<!-- ========================================================= -->
+<div class="page-break"></div>
+
+<h2>9. Appendix</h2>
+
+<h3>9.1 Annotated Directory Structure</h3>
+<div class="code-block">
+Iris-Flower-Classification/
+├── .gitattributes              # Git LFS tracking rules (*.pth, *.joblib, test_samples)
+├── .gitignore                  # Git exclusions (node_modules, caches, environments)
+├── Dockerfile                  # Production multi-stage build (Node 20 + Python 3.11)
+├── LICENSE                     # MIT Open Source License
+├── Procfile                    # Cloud process runner (Gunicorn WSGI web service)
+├── README.md                   # Repository documentation with Live Demo badge
+├── netlify.toml                # Netlify edge deployment configuration
+├── render.yaml                 # Render Infrastructure-as-Code Blueprint
+│
+├── backend/                    # Python Backend Service Tier
+│   ├── app.py                  # Central Flask controller, API routes & static server
+│   ├── requirements.txt        # Backend dependencies (torch, flask, scikit-learn, etc.)
+│   ├── model/                  # Deep Learning & Analytics Engine
+│   │   ├── __init__.py         # Package initializer
+│   │   ├── nn_model.py         # PyTorch IrisNet 4-layer architecture & activations
+│   │   ├── train.py            # Training script with early stopping & evaluation
+│   │   ├── analysis.py         # Headless EDA & PCA chart generation engine
+│   │   ├── iris_nn.pth         # Persisted PyTorch model weights (95.65% accuracy)
+│   │   ├── scaler.joblib       # Fitted StandardScaler parameters
+│   │   ├── test_data.joblib    # Isolated 23-sample held-out test split
+│   │   ├── training_history.joblib # Loss and accuracy trajectories
+│   │   └── confusion_matrix.joblib # Test set confusion matrix data
+│   ├── utils/                  # Utility Helpers
+│   │   ├── __init__.py         # Package initializer
+│   │   └── preprocess.py       # Input range validator & scaler loader
+│   └── test_samples/           # Test & Benchmark Assets
+│       ├── iris_test_set.csv   # 30-sample benchmark CSV for web evaluation
+│       ├── sample_setosa.jpg   # Sample flower image for visual testing
+│       ├── sample_versicolor.jpg # Sample flower image for visual testing
+│       └── sample_virginica.jpg # Sample flower image for visual testing
+│
+└── frontend/                   # React 18 SPA Client Tier
+    ├── index.html              # HTML shell linking Inter font
+    ├── package.json            # Node dependencies (React 18, Vite, Tailwind CSS)
+    ├── package-lock.json       # Deterministic dependency tree lockfile
+    ├── postcss.config.js       # PostCSS plugins (Tailwind, Autoprefixer)
+    ├── tailwind.config.js      # Custom dark-theme tokens and color palettes
+    ├── vercel.json             # Vercel deployment routing rules
+    ├── vite.config.js          # Vite build tool configuration
+    ├── dist/                   # Pre-compiled production bundle (served by Flask)
+    └── src/                    # React Source Code
+        ├── main.jsx            # Application entry point with BrowserRouter
+        ├── App.jsx             # Root layout with responsive navigation bar
+        ├── api.js              # Axios REST client with adaptive base URL
+        ├── index.css           # Global Tailwind directives & custom CSS animations
+        ├── components/         # Reusable UI Components
+        │   ├── Navbar.jsx      # Top navigation with active route highlights
+        │   ├── ChartCard.jsx   # Base64 image card with skeleton loading state
+        │   ├── ClassBadge.jsx  # Dynamic species pill with confidence indicators
+        │   └── MetricsTable.jsx # Styled Sklearn classification report parser
+        └── pages/              # Primary View Pages
+            ├── Home.jsx        # Multi-modal console (Form, Image, Test Set)
+            ├── EDA.jsx         # Statistical EDA dashboard (4 charts)
+            ├── PCA.jsx         # PCA projections & scree variance curves
+            └── Results.jsx     # Empirical model report & learning curves
+</div>
+
+<h3>9.2 Execution & Environment Setup Commands</h3>
+<p>
+To replicate the environment and execute the project locally from source:
+</p>
+<div class="code-block">
+# 1. Clone repository with Git LFS support
+git clone https://github.com/otakushrey/Iris-Flower-Classification.git
+cd Iris-Flower-Classification
+git lfs pull
+
+# 2. Setup and run Python Backend
+cd backend
+python -m venv venv
+source venv/bin/activate  # Or on Windows: venv\Scripts\activate
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+pip install -r requirements.txt
+python model/train.py     # Verify training and generate weights
+python app.py             # Starts API on http://localhost:5000
+
+# 3. Setup and run React Frontend (in a separate terminal)
+cd ../frontend
+npm install
+npm run build             # Compiles bundle to frontend/dist
+npm run dev               # Starts local Vite dev server on http://localhost:3000
+</div>
+
+<h3>9.3 Key Code Artifacts</h3>
+<p><strong>Artifact 1: PyTorch IrisNet Architecture (<code>backend/model/nn_model.py</code>)</strong></p>
+<div class="code-block">
+import torch
+import torch.nn as nn
+
+class IrisNet(nn.Module):
+    def __init__(self, input_dim=4, hidden1=64, hidden2=32, hidden3=16, num_classes=3):
+        super(IrisNet, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden1)
+        self.bn1 = nn.BatchNorm1d(hidden1)
+        self.drop1 = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(hidden1, hidden2)
+        self.bn2 = nn.BatchNorm1d(hidden2)
+        self.drop2 = nn.Dropout(0.2)
+        self.fc3 = nn.Linear(hidden2, hidden3)
+        self.out = nn.Linear(hidden3, num_classes)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.drop1(self.relu(self.bn1(self.fc1(x))))
+        x = self.drop2(self.relu(self.bn2(self.fc2(x))))
+        x = self.relu(self.fc3(x))
+        return self.out(x)  # Raw logits for CrossEntropyLoss
+
+def get_probabilities(logits: torch.Tensor) -> torch.Tensor:
+    return torch.softmax(logits, dim=-1)
+</div>
+
+<p><strong>Artifact 2: Unified Static Frontend Server (<code>backend/app.py</code>)</strong></p>
+<div class="code-block">
+FRONTEND_DIST = os.path.abspath(os.path.join(BACKEND_DIR, '..', 'frontend', 'dist'))
+
+@app.route('/', defaults={'path': ''})
+@app.route('/&lt;path:path&gt;')
+def serve_frontend(path):
+    if path.startswith('api/'):
+        return jsonify({'error': f'Endpoint /{path} not found'}), 404
+    file_path = os.path.join(FRONTEND_DIST, path)
+    if path != '' and os.path.exists(file_path):
+        return send_from_directory(FRONTEND_DIST, path)
+    index_file = os.path.join(FRONTEND_DIST, 'index.html')
+    if os.path.exists(index_file):
+        return send_from_directory(FRONTEND_DIST, 'index.html')
+    return jsonify({'status': 'Iris Flower Classification API running'})
+</div>
+
+</body>
+</html>

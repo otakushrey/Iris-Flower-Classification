@@ -1,0 +1,43 @@
+sequenceDiagram
+    autonumber
+    actor User as User Browser
+    participant UI as React UI (Home.jsx)
+    participant API as Axios Client (api.js)
+    participant Flask as Flask Controller (app.py)
+    participant Prep as Preprocessor (preprocess.py)
+    participant Scaler as StandardScaler (scaler.joblib)
+    participant Model as PyTorch IrisNet (nn_model.py)
+    participant Vis as Visualizer Engine (analysis.py)
+
+    Note over User, Model: Workflow 1: Single Sample Prediction Request
+    User->>UI: Enters features [5.1, 3.5, 1.4, 0.2] & clicks "Classify"
+    UI->>API: predict({sepal_length: 5.1, sepal_width: 3.5, ...})
+    API->>Flask: POST /api/predict (JSON Payload)
+    Flask->>Prep: validate_features(data)
+    Prep-->>Flask: (features_list, None)
+    Flask->>Scaler: scaler.transform(X)
+    Scaler-->>Flask: X_scaled (numpy.ndarray)
+    Flask->>Model: torch.from_numpy(X_scaled) -> model(tensor)
+    Model-->>Flask: raw logits (shape: [1, 3])
+    Flask->>Model: get_probabilities(logits)
+    Model-->>Flask: softmax probabilities [0.993, 0.005, 0.002]
+    Flask-->>API: HTTP 200 OK (predicted_class: "setosa", confidence: 0.993, probabilities)
+    API-->>UI: Response Promise Resolved
+    UI-->>User: Renders ClassBadge("setosa", 99.3%) & Probability Bars
+
+    Note over User, Vis: Workflow 2: Test Set Evaluation & Report Generation
+    User->>UI: Uploads test CSV or clicks "Load 30-Sample Test Set"
+    UI->>API: evaluateTestSet(formDataOrJson)
+    API->>Flask: POST /api/evaluate-testset
+    Flask->>Scaler: scaler.transform(X_batch)
+    Scaler-->>Flask: X_batch_scaled
+    Flask->>Model: model(torch.tensor(X_batch_scaled))
+    Model-->>Flask: batch_probs
+    Flask->>Flask: Compute accuracy, precision, recall, f1-score & confusion matrix
+    Flask->>Vis: _make_confusion_matrix_chart(cm_data, class_names)
+    Vis->>Vis: plt.subplots(dark_background), sns.heatmap()
+    Vis->>Vis: io.BytesIO() -> base64.b64encode()
+    Vis-->>Flask: base64_image_string
+    Flask-->>API: HTTP 200 OK (accuracy: 1.0, report: "...", cm_chart: base64)
+    API-->>UI: Response Promise Resolved
+    UI-->>User: Renders MetricsTable, Confusion Matrix Chart & Sample Results Table

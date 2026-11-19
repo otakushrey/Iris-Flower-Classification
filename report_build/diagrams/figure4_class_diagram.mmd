@@ -1,0 +1,127 @@
+classDiagram
+    direction TB
+
+    class IrisNet {
+        +Linear fc1 (4 to 64)
+        +BatchNorm1d bn1
+        +Dropout drop1 (0.3)
+        +Linear fc2 (64 to 32)
+        +BatchNorm1d bn2
+        +Dropout drop2 (0.2)
+        +Linear fc3 (32 to 16)
+        +Linear out (16 to 3)
+        +forward(x: Tensor) Tensor
+        +get_probabilities(logits: Tensor) Tensor
+    }
+
+    class IrisAnalysis {
+        -DataFrame df
+        -Bunch iris
+        -dict _pca_cache
+        +get_dataset_info() dict
+        +get_correlation_heatmap() str_b64
+        +get_pairplot() str_b64
+        +get_distribution_plots() str_b64
+        +get_boxplots() str_b64
+        +get_pca_2d() str_b64
+        +get_pca_3d() str_b64
+        +get_scree_plot() str_b64
+        +get_pca_loadings() str_b64
+        +get_explained_variance() list
+    }
+
+    class Preprocessor {
+        +validate_features(data: dict) tuple
+        +load_scaler() StandardScaler
+    }
+
+    class FlaskApp {
+        +IrisNet model
+        +StandardScaler scaler
+        +bool model_loaded
+        +health() Response
+        +eda() Response
+        +pca() Response
+        +model_report() Response
+        +predict() Response
+        +predict_image() Response
+        +evaluate_testset() Response
+        +sample_testset() Response
+        +serve_frontend() Response
+    }
+
+    class FrontendAPI {
+        +fetchEDA() Promise
+        +fetchPCA() Promise
+        +fetchModelReport() Promise
+        +predict(features) Promise
+        +predictImage(formData) Promise
+        +evaluateTestSet(data) Promise
+        +fetchSampleTestSet() Promise
+    }
+
+    class HomePage {
+        -string activeTab
+        -object form
+        -object result
+        -object imageResult
+        -object evalResult
+        +handleFormSubmit() void
+        +handleImageSubmit() void
+        +handleTestSetUpload() void
+        +handleLoadSampleTestSet() void
+    }
+
+    class EDAPage {
+        -object data
+        -bool loading
+        +useEffect() void
+    }
+
+    class PCAPage {
+        -object data
+        -bool loading
+        +useEffect() void
+    }
+
+    class ResultsPage {
+        -object data
+        -bool loading
+        +useEffect() void
+    }
+
+    class ChartCard {
+        +string title
+        +string base64Image
+        +string description
+        +render() JSX
+    }
+
+    class ClassBadge {
+        +string className
+        +number confidence
+        +render() JSX
+    }
+
+    class MetricsTable {
+        +string report
+        +parseReportString() Array
+        +render() JSX
+    }
+
+    FlaskApp --> IrisNet : executes inference
+    FlaskApp --> IrisAnalysis : generates analytics
+    FlaskApp --> Preprocessor : validates and scales
+    HomePage --> FrontendAPI : calls endpoints
+    EDAPage --> FrontendAPI : calls endpoints
+    PCAPage --> FrontendAPI : calls endpoints
+    ResultsPage --> FrontendAPI : calls endpoints
+    FrontendAPI ..> FlaskApp : HTTP JSON REST
+
+    HomePage ..> ClassBadge : uses
+    HomePage ..> ChartCard : uses
+    HomePage ..> MetricsTable : uses
+    EDAPage ..> ChartCard : uses
+    PCAPage ..> ChartCard : uses
+    ResultsPage ..> ChartCard : uses
+    ResultsPage ..> MetricsTable : uses

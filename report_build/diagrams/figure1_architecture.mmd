@@ -1,0 +1,64 @@
+flowchart TB
+    subgraph ClientLayer ["Frontend Client Layer (React 18 + Vite + Tailwind CSS)"]
+        direction TB
+        UI_Home["Home Page\n(Measurements Form, Image Upload, Test Set Console)"]
+        UI_EDA["EDA Dashboard\n(Heatmap, Pairplot, Violin & Boxplots)"]
+        UI_PCA["PCA Visualizer\n(2D & 3D Projections, Scree Plot, Loadings)"]
+        UI_Report["Model Report Page\n(Metrics Table, Confusion Matrix, Learning Curves)"]
+        AxiosClient["API Client Layer\n(src/api.js via Axios)"]
+        UI_Home --> AxiosClient
+        UI_EDA --> AxiosClient
+        UI_PCA --> AxiosClient
+        UI_Report --> AxiosClient
+    end
+
+    subgraph GatewayLayer ["Web Server & Gateway Layer"]
+        direction TB
+        Gunicorn["Gunicorn WSGI Server\n(Workers: 2, Timeout: 120s)"]
+        StaticServe["Static SPA Handler\n(Serves frontend/dist & index.html)"]
+        FlaskCore["Flask Application Controller\n(backend/app.py)"]
+        Gunicorn --> FlaskCore
+        FlaskCore --> StaticServe
+    end
+
+    subgraph ServiceLayer ["Backend Service & Processing Layer"]
+        direction TB
+        ValService["Input Validation & Preprocessing\n(utils/preprocess.py)"]
+        PredictService["Inference Pipeline\n(Softmax Probabilities & Confidence)"]
+        ImageService["Image Feature Extractor\n(Morphological & Color Analysis)"]
+        BatchService["Batch Test Evaluator\n(Sklearn Metrics & Confusion Matrix)"]
+        EDAService["Statistical Visualizer\n(Matplotlib Agg & Seaborn Base64)"]
+    end
+
+    subgraph DLModelLayer ["Deep Learning & Analysis Engine"]
+        direction TB
+        IrisNetModel["PyTorch Neural Network (IrisNet)\n(4 -> 64 -> 32 -> 16 -> 3)"]
+        PCAModel["PCA Decomposition Engine\n(StandardScaler + Scikit-Learn PCA)"]
+        AutoTrain["Auto-Training Safeguard\n(model/train.py)"]
+    end
+
+    subgraph StorageLayer ["Persistence & Git LFS Artifacts"]
+        direction TB
+        Weights["iris_nn.pth\n(Trained Weights - 95.65% Acc)"]
+        Scaler["scaler.joblib\n(StandardScaler Parameters)"]
+        History["training_history.joblib\n(Loss & Accuracy Curves)"]
+        TestData["test_data.joblib & iris_test_set.csv\n(Benchmark Test Data)"]
+    end
+
+    AxiosClient ==>|"REST API Calls (JSON / Multipart)"| FlaskCore
+    FlaskCore --> ValService
+    FlaskCore --> PredictService
+    FlaskCore --> ImageService
+    FlaskCore --> BatchService
+    FlaskCore --> EDAService
+
+    PredictService --> IrisNetModel
+    ValService --> Scaler
+    IrisNetModel --- Weights
+    ImageService --> PredictService
+    BatchService --> IrisNetModel
+    EDAService --> PCAModel
+    AutoTrain --> Weights
+    AutoTrain --> Scaler
+    AutoTrain --> History
+    BatchService --- TestData
