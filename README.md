@@ -8,6 +8,8 @@
 [![Flask](https://img.shields.io/badge/Flask-3-000000.svg)](https://flask.palletsprojects.com/)
 [![Git LFS](https://img.shields.io/badge/Git%20LFS-Enabled-orange.svg)](https://git-lfs.com/)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/otakushrey/Iris-Flower-Classification)
+
 A modern, full-stack machine learning application designed to classify Iris flower species using Exploratory Data Analysis (EDA), Principal Component Analysis (PCA), and a custom **PyTorch Supervised Neural Network** with regularized multi-layer perceptron architecture.
 
 ---
