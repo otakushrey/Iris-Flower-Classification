@@ -1,0 +1,11 @@
+flask
+flask-cors
+torch
+torchvision
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+joblib
+Pillow
