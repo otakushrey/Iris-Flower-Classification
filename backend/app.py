@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 # ------------------------------------------------------------------
@@ -485,8 +485,45 @@ def get_sample_testset():
     return jsonify({'samples': samples, 'count': len(samples)})
 
 
+FRONTEND_DIST = os.path.abspath(os.path.join(BACKEND_DIR, '..', 'frontend', 'dist'))
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    """Serve built React frontend in unified production deployment."""
+    if path.startswith('api/'):
+        return jsonify({'error': f'Endpoint /{path} not found'}), 404
+
+    file_path = os.path.join(FRONTEND_DIST, path)
+    if path != '' and os.path.exists(file_path):
+        return send_from_directory(FRONTEND_DIST, path)
+
+    index_file = os.path.join(FRONTEND_DIST, 'index.html')
+    if os.path.exists(index_file):
+        return send_from_directory(FRONTEND_DIST, 'index.html')
+
+    return jsonify({
+        'name': 'Iris Flower Classification API',
+        'status': 'online',
+        'model_loaded': model_loaded,
+        'endpoints': [
+            '/api/health',
+            '/api/eda',
+            '/api/pca',
+            '/api/model-report',
+            '/api/predict',
+            '/api/predict-image',
+            '/api/evaluate-testset',
+            '/api/sample-testset'
+        ]
+    })
+
+
 # ------------------------------------------------------------------
 # Entry point
 # ------------------------------------------------------------------
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    app.run(debug=debug, host='0.0.0.0', port=port)

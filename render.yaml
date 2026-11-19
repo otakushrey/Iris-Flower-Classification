@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: iris-flower-classifier
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r backend/requirements.txt"
+    startCommand: "gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: PORT
+        value: 10000

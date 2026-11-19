@@ -170,6 +170,60 @@ Open your browser at `http://localhost:3000` to interact with the application.
 
 ---
 
+## ☁️ Online Cloud Deployment Guide
+
+The project is fully pre-configured for instant zero-configuration deployment on **Render**, **Railway**, **Hugging Face Spaces**, or **Vercel**:
+
+### 🌟 Option 1: Render.com (Recommended — 100% Free Full-Stack)
+Render serves both the built React UI and Flask PyTorch backend in a single free web service.
+
+1. Go to [dashboard.render.com](https://dashboard.render.com/) and sign in with GitHub.
+2. Click **New +** → **Web Service**.
+3. Select your repository: `otakushrey/Iris-Flower-Classification`.
+4. Configure settings:
+   - **Environment**: `Python 3`
+   - **Build Command**:
+     ```bash
+     cd frontend && npm install && npm run build && cd ../backend && pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements.txt
+     ```
+   - **Start Command**:
+     ```bash
+     gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+     ```
+5. Click **Deploy Web Service**! Render will give you a live URL (e.g. `https://iris-flower-classification.onrender.com`).
+
+---
+
+### 🚂 Option 2: Railway.app (1-Click Deployment)
+1. Go to [railway.app](https://railway.app/) and sign in with GitHub.
+2. Click **New Project** → **Deploy from GitHub repo**.
+3. Select `otakushrey/Iris-Flower-Classification`.
+4. Railway will automatically detect the `Procfile` and `Dockerfile` and deploy the full-stack container.
+5. In project settings, click **Generate Domain** to get your public live URL.
+
+---
+
+### 🤗 Option 3: Hugging Face Spaces (Docker Free Cloud ML)
+1. Go to [huggingface.co/spaces](https://huggingface.co/spaces) and click **Create new Space**.
+2. Space SDK: Select **Docker** (Blank).
+3. Connect or push your GitHub repository:
+   ```bash
+   git remote add space https://huggingface.co/spaces/YOUR_USERNAME/iris-flower-classifier
+   git push space main
+   ```
+4. Hugging Face builds the included multi-stage `Dockerfile` and runs your app publicly with zero maintenance!
+
+---
+
+### ⚡ Option 4: Split Hosting (Frontend on Vercel + Backend on Render)
+- **Backend**: Deploy `/backend` on Render as Web Service (`https://your-api.onrender.com`).
+- **Frontend**: Deploy `/frontend` on [Vercel](https://vercel.com):
+  - Framework Preset: `Vite`
+  - Root Directory: `frontend`
+  - Environment Variable: `VITE_API_URL=https://your-api.onrender.com`
+
+---
+
 ## 🌐 API Reference
 
 | Endpoint | Method | Parameters / Body | Description |
