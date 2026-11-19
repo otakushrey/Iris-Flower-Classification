@@ -7,6 +7,9 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38B2AC.svg)](https://tailwindcss.com/)
 [![Flask](https://img.shields.io/badge/Flask-3-000000.svg)](https://flask.palletsprojects.com/)
 [![Git LFS](https://img.shields.io/badge/Git%20LFS-Enabled-orange.svg)](https://git-lfs.com/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://iris-flower-classifier-z98q.onrender.com/)
+
+> 🌐 **Live Web Application**: [https://iris-flower-classifier-z98q.onrender.com/](https://iris-flower-classifier-z98q.onrender.com/)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/otakushrey/Iris-Flower-Classification)
 
@@ -115,7 +118,7 @@ Output Linear           (N, 16)        (N, 3)         CrossEntropyLoss / Softmax
 
 ### Training Configuration
 - **Dataset Split**: 70% Train, 15% Validation, 15% Test (Stratified)
-- **Optimizer**: Adam ($\text{lr} = 0.001$, $\text{weight\_decay} = 1\times 10^{-4}$)
+- **Optimizer**: Adam (`lr = 0.001`, `weight_decay = 1e-4`)
 - **Loss Function**: Cross-Entropy Loss
 - **Learning Rate Scheduler**: `ReduceLROnPlateau` (patience = 10, factor = 0.5)
 - **Early Stopping**: Patience = 20 epochs monitoring validation loss
@@ -172,9 +175,17 @@ Open your browser at `http://localhost:3000` to interact with the application.
 
 ---
 
-## ☁️ Online Cloud Deployment Guide
+## ☁️ Online Cloud Deployment
 
-The project is fully pre-configured for instant zero-configuration deployment on **Render**, **Railway**, **Hugging Face Spaces**, or **Vercel**:
+### 🌐 Live Production Deployment (Render)
+The application is deployed and live on Render:
+👉 **[https://iris-flower-classifier-z98q.onrender.com/](https://iris-flower-classifier-z98q.onrender.com/)**
+
+The service runs both the React 18 production frontend and the Flask PyTorch REST API as a unified full-stack application with Gunicorn WSGI.
+
+---
+
+### 🌟 Alternative Deployments Pre-Configured
 
 ### 🌟 Option 1: Render.com (Recommended — 100% Free Full-Stack)
 Render serves both the built React UI and Flask PyTorch backend in a single free web service.
@@ -267,6 +278,8 @@ Render serves both the built React UI and Flask PyTorch backend in a single free
 
 ## 👤 Author
 
+- **Author**: Shreyan Mondal
 - **GitHub**: [@otakushrey](https://github.com/otakushrey)
 - **Repository**: [Iris-Flower-Classification](https://github.com/otakushrey/Iris-Flower-Classification)
+- **Live Demo**: [iris-flower-classifier-z98q.onrender.com](https://iris-flower-classifier-z98q.onrender.com/)
 - **License**: MIT
