@@ -45,8 +45,14 @@ scaler = None
 model_loaded = False
 
 try:
-    _model = IrisNet()
     _weights_path = os.path.join(MODEL_DIR, 'iris_nn.pth')
+    # If model file is missing or unexpanded LFS pointer (< 2000 bytes), auto-train
+    if not os.path.exists(_weights_path) or os.path.getsize(_weights_path) < 2000:
+        print("Model file missing or LFS pointer detected. Auto-training PyTorch model...")
+        import subprocess
+        subprocess.run([sys.executable, os.path.join(MODEL_DIR, 'train.py')], check=True)
+
+    _model = IrisNet()
     _model.load_state_dict(torch.load(_weights_path, map_location='cpu'))
     _model.eval()
     model = _model
