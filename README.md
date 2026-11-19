@@ -6,6 +6,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38B2AC.svg)](https://tailwindcss.com/)
 [![Flask](https://img.shields.io/badge/Flask-3-000000.svg)](https://flask.palletsprojects.com/)
+[![Git LFS](https://img.shields.io/badge/Git%20LFS-Enabled-orange.svg)](https://git-lfs.com/)
 
 A modern, full-stack machine learning application designed to classify Iris flower species using Exploratory Data Analysis (EDA), Principal Component Analysis (PCA), and a custom **PyTorch Supervised Neural Network** with regularized multi-layer perceptron architecture.
 
@@ -125,6 +126,14 @@ Output Linear           (N, 16)        (N, 3)         CrossEntropyLoss / Softmax
 ### Prerequisites
 - Python 3.10+ (or py launcher)
 - Node.js 18+ and npm
+- [Git LFS](https://git-lfs.com/) (`git lfs install`)
+
+### Clone with Git LFS
+```bash
+git clone https://github.com/otakushrey/Iris-Flower-Classification.git
+cd Iris-Flower-Classification
+git lfs pull
+```
 
 ---
 
